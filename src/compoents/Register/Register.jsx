@@ -1,7 +1,11 @@
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import React, { useState } from 'react';
+import auth from '../../firebase/firebase.config';
 
 const Register = () => {
+
+    const [regError, setRegError] = useState('')
 
     const handleRegister = e =>{
         e.preventDefault();
@@ -9,6 +13,16 @@ const Register = () => {
         const email = e.target.email.value;
         const password = e.target.password.value;
         console.log(email,password)
+        setRegError('')
+        // create user 
+        createUserWithEmailAndPassword(auth,email,password)
+        .then(result => {
+            console.log(result.user)
+        })
+        .catch(error =>{
+            console.error(error)
+            setRegError(error.message)
+        })
     }
 
     return (
@@ -21,6 +35,9 @@ const Register = () => {
                 <input className='mb-2 w-3/4 btn
                  btn-primary' type="submit" value="Register" />
             </form>
+            {
+                regError && <p className='text-xl text-red-500'>{regError}</p>
+            }
            </div>
         </div>
     );
