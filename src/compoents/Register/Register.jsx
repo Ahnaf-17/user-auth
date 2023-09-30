@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import React, { useState } from 'react';
 import auth from '../../firebase/firebase.config';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
@@ -33,7 +33,14 @@ const Register = () => {
         createUserWithEmailAndPassword(auth, email, password)
             .then(result => {
                 console.log(result.user);
-                setSuccess('user created')
+                setSuccess('user created');
+                //send verification email
+                sendEmailVerification(result.user)
+                .then(() =>{
+                    alert('please verify your email')
+                })
+                
+
             })
             .catch(error => {
                 console.error(error)
